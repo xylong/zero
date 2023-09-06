@@ -1,0 +1,8 @@
+POST http://localhost:8888/user/info
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+
+###

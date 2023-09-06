@@ -1,0 +1,46 @@
+syntax = "v1"
+
+info (
+	title:   "用户api"
+	desc:    "演示如何编写 api 文件"
+	author:  "xyl"
+	date:    "2023/09/06"
+	version: "v1"
+)
+
+type (
+	UserInfoReq {
+		UserID int `json:"userId"`
+	}
+
+	UserInfoResp {
+		UserID   int    `json:"userId"`
+		Nickname string `json:"nickname"`
+	}
+)
+
+type (
+	UserUpdateReq {
+		UserID   int    `json:"userId"`
+		Nickname string `json:"nickname"`
+	}
+
+	UserUpdateResp {
+		Flag bool `json:"flag"`
+	}
+)
+
+@server (
+	group: user
+	prefix: users
+)
+
+service user-api {
+	@doc "获取用户信息"
+	@handler userInfo
+	post /:id(UserInfoReq) returns (UserInfoResp)
+
+	@doc "编辑用户信息"
+	@handler userUpdate
+	post /update(UserUpdateReq) returns (UserUpdateResp)
+}
