@@ -20,6 +20,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: user.UserListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/:id",
 				Handler: user.UserInfoHandler(serverCtx),
 			},

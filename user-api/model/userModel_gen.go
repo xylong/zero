@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"zero/user-api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -24,6 +25,7 @@ var (
 
 type (
 	userModel interface {
+		Query(ctx context.Context, req *types.UserListReq) ([]*User,error)
 		Insert(ctx context.Context, data *User) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*User, error)
 		FindOneByPhone(ctx context.Context, phone string) (*User, error)
@@ -111,4 +113,38 @@ func (m *defaultUserModel) Update(ctx context.Context, newData *User) error {
 
 func (m *defaultUserModel) tableName() string {
 	return m.table
+}
+
+func (m *defaultUserModel) Query(ctx context.Context,req *types.UserListReq) ([]*User,error)  {
+	var (
+		users []*User
+		total int64
+		err error
+	)
+
+	countSql := fmt.Sprintf("select %s from %s where 1 ", "count(id) as total_size", m.table)
+	_ = m.conn.QueryRowCtx(ctx, &total, countSql)
+
+	where := "1 "
+	if len(req.Name)>0 {
+		where += "AND name like ? "
+		sql := fmt.Sprintf("select %s from %s where %s  limit %d,%d",
+			"*", m.table, where, (req.Page-1)*req.PageSize, req.PageSize)
+
+		err = m.conn.QueryRowsCtx(ctx, &users, sql, "%" + req.Name + "%")
+	}else {
+		sql := fmt.Sprintf("select %s from %s where %s  limit %d,%d",
+			"*", m.table, where, (req.Page-1)*req.PageSize, req.PageSize)
+
+		err = m.conn.QueryRowsCtx(ctx, &users, sql)
+	}
+
+	switch err {
+	case nil:
+		return users, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }

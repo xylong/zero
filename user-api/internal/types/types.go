@@ -34,10 +34,18 @@ type UserUpdateResp struct {
 type UserListReq struct {
 	Page     int    `form:"page"`
 	PageSize int    `form:"pageSize"`
-	Username string `form:"username"`
+	Name     string `form:"name"`
 }
 
-type UserListItem struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
+type User struct {
+	Id     int64  `json:"id"`
+	Name   string `json:"name"`
+	Phone  string `json:"phone"`
+	Email  string `json:"email"`
+	Gender int64  `json:"gender"`
+	Avatar string `json:"avatar"`
+}
+
+type UserListResp struct {
+	List []User `json:"list"`
 }
