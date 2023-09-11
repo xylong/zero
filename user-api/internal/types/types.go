@@ -2,12 +2,24 @@
 package types
 
 type UserInfoReq struct {
-	UserID int `json:"userId"`
+	ID int64 `path:"id"`
 }
 
 type UserInfoResp struct {
-	UserID   int    `json:"userId"`
+	ID       int64  `json:"id"`
 	Nickname string `json:"nickname"`
+}
+
+type LoginReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginResp struct {
+	ID       int64  `json:"id"`
+	Name     string `json:"name"`
+	Token    string `json:"token"`
+	ExpireAt string `json:"expireAt"`
 }
 
 type UserUpdateReq struct {
@@ -17,4 +29,15 @@ type UserUpdateReq struct {
 
 type UserUpdateResp struct {
 	Flag bool `json:"flag"`
+}
+
+type UserListReq struct {
+	Page     int    `form:"page"`
+	PageSize int    `form:"pageSize"`
+	Username string `form:"username"`
+}
+
+type UserListItem struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
 }

@@ -1,3 +1,7 @@
 Name: user-api
 Host: 0.0.0.0
 Port: 8888
+
+DB:
+  DSN: "root:123456@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+  Debug: true

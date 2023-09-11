@@ -1,24 +1,24 @@
-package handler
+package user
 
 import (
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"zero/user-api/internal/logic"
+	"zero/user-api/internal/logic/user"
 	"zero/user-api/internal/svc"
 	"zero/user-api/internal/types"
 )
 
-func userInfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UserInfoReq
+		var req types.LoginReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewUserInfoLogic(r.Context(), svcCtx)
-		resp, err := l.UserInfo(&req)
+		l := user.NewLoginLogic(r.Context(), svcCtx)
+		resp, err := l.Login(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

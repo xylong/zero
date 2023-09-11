@@ -10,12 +10,27 @@ info (
 
 type (
 	UserInfoReq {
-		UserID int `json:"userId"`
+		ID int64 `path:"id"`
 	}
 
 	UserInfoResp {
-		UserID   int    `json:"userId"`
+		ID       int64  `json:"id"`
 		Nickname string `json:"nickname"`
+	}
+)
+
+type (
+	// 定义登录接口的 json 请求体
+	LoginReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	// 定义登录接口的 json 响应体
+	LoginResp {
+		ID       int64  `json:"id"`
+		Name     string `json:"name"`
+		Token    string `json:"token"`
+		ExpireAt string `json:"expireAt"`
 	}
 )
 
@@ -30,17 +45,34 @@ type (
 	}
 )
 
+type (
+	UserListReq {
+		Page     int    `form:"page"`
+		PageSize int    `form:"pageSize"`
+		Username string `form:"username"`
+	}
+
+	UserListItem {
+		ID       int    `json:"id"`
+		Username string `json:"username"`
+	}
+)
+
 @server (
 	group: user
 	prefix: users
 )
 
 service user-api {
+	@doc "登录"
+	@handler login
+	post /login (LoginReq) returns (LoginResp)
+
 	@doc "获取用户信息"
 	@handler userInfo
-	post /:id(UserInfoReq) returns (UserInfoResp)
+	get /:id (UserInfoReq) returns (UserInfoResp)
 
 	@doc "编辑用户信息"
 	@handler userUpdate
-	post /update(UserUpdateReq) returns (UserUpdateResp)
+	post /update (UserUpdateReq) returns (UserUpdateResp)
 }
