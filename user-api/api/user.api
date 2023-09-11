@@ -49,12 +49,20 @@ type (
 	UserListReq {
 		Page     int    `form:"page"`
 		PageSize int    `form:"pageSize"`
-		Username string `form:"username"`
+		Name     string `form:"name"`
 	}
 
-	UserListItem {
-		ID       int    `json:"id"`
-		Username string `json:"username"`
+	User {
+		ID     int64  `json:"id"`
+		Name   string `json:"name"`
+		Phone  string `json:"phone"`
+		Email  string `json:"email"`
+		Gender int64  `json:"gender"`
+		Avatar string `json:"avatar"`
+	}
+
+	UserListResp {
+		List []User `json:"list"`
 	}
 )
 
@@ -67,6 +75,10 @@ service user-api {
 	@doc "登录"
 	@handler login
 	post /login (LoginReq) returns (LoginResp)
+
+	@doc "用户列表"
+	@handler userList
+	get /list (UserListReq) returns (UserListResp)
 
 	@doc "获取用户信息"
 	@handler userInfo
